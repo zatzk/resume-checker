@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model UserProfile {
+  id           String   @id @default(uuid())
+  rawText      String?
+  techStack    String?  // JSON stringified array
+  idioms       String?  // JSON stringified array
+  projects     Project[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id            String      @id @default(uuid())
+  name          String
+  description   String
+  stats         String?     // GitHub-style stats
+  status        String      // Deployed vs Staged
+  userProfileId String
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id])
+}
+
+model CV {
+  id            String          @id @default(uuid())
+  name          String
+  content       String          // JSON stringified CV data
+  type          String          // Generated, Analyzed, Optimized
+  applicationId String?
+  application   Application?    @relation(fields: [applicationId], references: [id])
+  reports       AnalysisReport[]
+  createdAt     DateTime        @default(now())
+}
+
+model Application {
+  id              String   @id @default(uuid())
+  company         String
+  role            String
+  source          String?
+  status          String   // Sent, Selected, Hired, Rejected
+  salaryRange     String?
+  link            String?
+  openDate        DateTime @default(now())
+  candidatureDate DateTime?
+  requirements    String?
+  notes           String?
+  cvs             CV[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AnalysisReport {
+  id                 String   @id @default(uuid())
+  cvId               String
+  cv                 CV       @relation(fields: [cvId], references: [id])
+  atsScore           Int
+  careerScore        Int
+  strategistScore    Int
+  atsFeedback        String
+  careerFeedback     String
+  strategistFeedback String
+  createdAt          DateTime @default(now())
+}
