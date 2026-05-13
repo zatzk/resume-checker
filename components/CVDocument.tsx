@@ -1,15 +1,43 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, Link } from '@react-pdf/renderer'
 
-interface CVData {
-  name?: string
-  role?: string
-  techStack?: string[]
-  experience?: string
-  targetRole?: string
-  targetCompany?: string
+interface GeneratedCV {
+  name: string
+  email: string
+  phone: string
+  location: string
+  linkedin?: string
+  website?: string
+  socials?: { platform: string; url: string }[]
+  summary: string
+  experience: {
+    title: string
+    company: string
+    location: string
+    dates: string
+    responsibilities: string[]
+  }[]
+  skills: {
+    category: string
+    items: string[]
+  }[]
+  education: {
+    degree: string
+    school: string
+    location: string
+    dates: string
+  }[]
+  certifications?: string[]
+  projects?: {
+    name: string
+    description: string
+    link?: string
+  }[]
+  languages?: {
+    language: string
+    level: string
+  }[]
 }
 
-// Define a simple style for the CV
 const styles = StyleSheet.create({
   page: {
     padding: 40,
@@ -17,83 +45,201 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
   },
   header: {
-    marginBottom: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: '#131313',
-    paddingBottom: 10,
+    marginBottom: 15,
+    textAlign: 'center',
   },
   name: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
+    marginBottom: 4,
   },
-  role: {
-    fontSize: 12,
+  contactInfo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    fontSize: 9,
     color: '#333333',
-    marginTop: 4,
-    textTransform: 'uppercase',
+    flexWrap: 'wrap',
   },
   section: {
-    marginTop: 15,
+    marginTop: 12,
   },
   sectionTitle: {
     fontSize: 10,
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    color: '#FFB300',
-    marginBottom: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+    borderBottomColor: '#000000',
     paddingBottom: 2,
+    marginBottom: 5,
   },
-  text: {
+  summaryText: {
+    fontSize: 9,
+    lineHeight: 1.5,
+    textAlign: 'justify',
+  },
+  experienceItem: {
+    marginBottom: 8,
+  },
+  expHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    fontWeight: 'bold',
+    fontSize: 10,
+  },
+  expSubHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    fontSize: 9,
+    fontStyle: 'italic',
+    marginBottom: 3,
+  },
+  bulletList: {
+    marginLeft: 10,
+  },
+  bulletPoint: {
+    flexDirection: 'row',
+    marginBottom: 2,
+  },
+  bullet: {
+    width: 8,
+    fontSize: 9,
+  },
+  bulletText: {
+    flex: 1,
     fontSize: 9,
     lineHeight: 1.4,
-    color: '#000000',
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 5,
+  skillCategory: {
+    marginBottom: 4,
   },
-  tag: {
-    fontSize: 8,
-    backgroundColor: '#F5F5F5',
-    padding: '2 5',
-    borderWidth: 0.5,
-    borderColor: '#DDDDDD',
+  skillText: {
+    fontSize: 9,
+    lineHeight: 1.4,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  link: {
+    color: '#0000EE',
+    textDecoration: 'underline',
   }
 })
 
-export function CVDocument({ data }: { data: CVData }) {
+export function CVDocument({ data }: { data: GeneratedCV }) {
+  if (!data) return null;
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{data.name || 'Your Name'}</Text>
-          <Text style={styles.role}>{data.role || 'Professional Role'}</Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Technical Stack</Text>
-          <View style={styles.grid}>
-            {(data.techStack || []).map((tech: string, i: number) => (
-              <Text key={i} style={styles.tag}>{tech}</Text>
-            ))}
+          <Text style={styles.name}>{data.name}</Text>
+          <View style={styles.contactInfo}>
+            <Text>{data.location}</Text>
+            <Text>|</Text>
+            <Text>{data.phone}</Text>
+            <Text>|</Text>
+            <Text>{data.email}</Text>
+            {data.linkedin && (
+              <>
+                <Text>|</Text>
+                <Link style={styles.link} src={data.linkedin}>LinkedIn</Link>
+              </>
+            )}
+            {data.website && (
+              <>
+                <Text>|</Text>
+                <Link style={styles.link} src={data.website}>Website</Link>
+              </>
+            )}
           </View>
         </View>
 
+        {/* Professional Summary */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Professional Experience</Text>
-          <Text style={styles.text}>{data.experience || 'Experience details will be mapped here...'}</Text>
+          <Text style={styles.sectionTitle}>Professional Summary</Text>
+          <Text style={styles.summaryText}>{data.summary}</Text>
         </View>
 
+        {/* Experience */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Targeted Alignment</Text>
-          <Text style={[styles.text, { fontStyle: 'italic' }]}>
-            This CV was automatically optimized for the {data.targetRole} role at {data.targetCompany}.
-          </Text>
+          <Text style={styles.sectionTitle}>Professional Experience</Text>
+          {data.experience.map((exp, index) => (
+            <View key={index} style={styles.experienceItem}>
+              <View style={styles.expHeader}>
+                <Text style={styles.bold}>{exp.company}</Text>
+                <Text>{exp.location}</Text>
+              </View>
+              <View style={styles.expSubHeader}>
+                <Text>{exp.title}</Text>
+                <Text>{exp.dates}</Text>
+              </View>
+              <View style={styles.bulletList}>
+                {exp.responsibilities.map((resp, i) => (
+                  <View key={i} style={styles.bulletPoint}>
+                    <Text style={styles.bullet}>•</Text>
+                    <Text style={styles.bulletText}>{resp}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
         </View>
+
+        {/* Skills */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Technical Skills</Text>
+          {data.skills.map((skill, index) => (
+            <View key={index} style={styles.skillCategory}>
+              <Text style={styles.skillText}>
+                <Text style={styles.bold}>{skill.category}: </Text>
+                {skill.items.join(', ')}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Education */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Education</Text>
+          {data.education.map((edu, index) => (
+            <View key={index} style={styles.experienceItem}>
+              <View style={styles.expHeader}>
+                <Text style={styles.bold}>{edu.school}</Text>
+                <Text>{edu.location}</Text>
+              </View>
+              <View style={styles.expSubHeader}>
+                <Text>{edu.degree}</Text>
+                <Text>{edu.dates}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {/* Projects if any */}
+        {data.projects && data.projects.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Projects</Text>
+            {data.projects.map((proj, index) => (
+              <View key={index} style={styles.experienceItem}>
+                <View style={styles.expHeader}>
+                  <Text style={styles.bold}>{proj.name}</Text>
+                  {proj.link && <Link style={styles.link} src={proj.link}>Link</Link>}
+                </View>
+                <Text style={styles.bulletText}>{proj.description}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Certifications if any */}
+        {data.certifications && data.certifications.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Certifications</Text>
+            <Text style={styles.skillText}>{data.certifications.join(', ')}</Text>
+          </View>
+        )}
       </Page>
     </Document>
   )

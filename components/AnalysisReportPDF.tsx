@@ -189,11 +189,31 @@ export function AnalysisReportPDF({ results }: { data?: AnalysisData, results: A
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Core Competencies</Text>
           <View style={styles.skillsGrid}>
-            {resume.skills.map((skill, i) => (
-              <Text key={i} style={styles.skill}>▪ {skill}</Text>
+            {resume.skills.map((skillGroup, i) => (
+              <View key={i} style={{ marginBottom: 4, width: '100%' }}>
+                <Text style={styles.skill}>
+                  ▪ {skillGroup.category}: <Text style={{ fontWeight: 'normal', textTransform: 'none' }}>{skillGroup.items.join(', ')}</Text>
+                </Text>
+              </View>
             ))}
           </View>
         </View>
+
+        {/* Projects */}
+        {resume.projects && resume.projects.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Key Projects</Text>
+            {resume.projects.map((proj, i) => (
+              <View key={i} style={styles.experienceBlock} wrap={false}>
+                <View style={styles.expHeader}>
+                  <Text style={styles.company}>{proj.name}</Text>
+                  {proj.link && <Link style={{ fontSize: 9, color: '#0000AA' }} src={proj.link}>Project Link</Link>}
+                </View>
+                <Text style={styles.bulletText}>{proj.description}</Text>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* Education */}
         <View style={styles.section}>

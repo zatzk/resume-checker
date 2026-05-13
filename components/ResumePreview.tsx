@@ -65,15 +65,33 @@ export function ResumePreview({ resume }: { resume: AmericanResume }) {
       {/* Skills */}
       <section className="mb-6">
         <h2 className="text-xs font-bold uppercase border-b border-gray-400 mb-3 font-sans tracking-widest py-1 bg-gray-50 px-2">Core Competencies</h2>
-        <div className="flex flex-wrap gap-x-6 gap-y-1 px-2">
-          {resume.skills.map((skill, i) => (
-            <div key={i} className="text-[11px] flex items-center gap-2 font-sans uppercase font-bold">
-              <span className="text-[8px] text-gray-400">■</span>
-              {skill}
+        <div className="space-y-2 px-2">
+          {resume.skills.map((skillGroup, i) => (
+            <div key={i} className="text-[11px] font-sans flex gap-2">
+              <span className="font-bold uppercase min-w-[120px]">{skillGroup.category}:</span>
+              <span className="text-gray-700">{skillGroup.items.join(', ')}</span>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Projects */}
+      {resume.projects && resume.projects.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-xs font-bold uppercase border-b border-gray-400 mb-3 font-sans tracking-widest py-1 bg-gray-50 px-2">Key Projects</h2>
+          <div className="space-y-4 px-2">
+            {resume.projects.map((proj, i) => (
+              <div key={i} className="break-inside-avoid">
+                <div className="flex justify-between items-baseline mb-1 font-sans">
+                  <h3 className="font-bold text-[12px] uppercase">{proj.name}</h3>
+                  {proj.link && <a href={proj.link} className="text-[10px] text-blue-700 underline" target="_blank" rel="noreferrer">Project Link</a>}
+                </div>
+                <p className="text-[12px] leading-snug text-gray-900">{proj.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Education */}
       <section className="mb-6">

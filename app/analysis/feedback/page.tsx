@@ -113,9 +113,32 @@ export default function AnalysisFeedbackPage() {
       <div className="col-span-12 lg:col-span-9 space-y-6">
         {/* Persona Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <PersonaCard title="P_01 // ATS_ENGINE" score={results.ats.score} feedback={results.ats.feedback} />
-          <PersonaCard title="P_02 // CAREER_HISTORIAN" score={results.career.score} feedback={results.career.feedback} />
-          <PersonaCard title="P_03 // STRATEGIST_AI" score={results.strategist.score} feedback={results.strategist.feedback} />
+          <PersonaCard 
+            title="P_01 // ATS_ENGINE" 
+            score={results.ats.score} 
+            feedback={results.ats.feedback} 
+            persona={results.ats.persona}
+          />
+          <PersonaCard 
+            title="P_02 // CAREER_HISTORIAN" 
+            score={results.career.score} 
+            feedback={results.career.feedback} 
+            persona={results.career.persona}
+          />
+          <PersonaCard 
+            title="P_03 // STRATEGIST_AI" 
+            score={results.strategist.score} 
+            feedback={results.strategist.feedback} 
+            persona={results.strategist.persona}
+          />
+        </div>
+
+        {/* Detailed Scores Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <ScoreTile label="Structure" score={results.detailedScores.structure} />
+          <ScoreTile label="Formatting" score={results.detailedScores.formatting} />
+          <ScoreTile label="Keywords" score={results.detailedScores.keywords} />
+          <ScoreTile label="Impact" score={results.detailedScores.impact} />
         </div>
 
         {/* Detailed Feedback Section */}
@@ -241,7 +264,7 @@ export default function AnalysisFeedbackPage() {
   )
 }
 
-function PersonaCard({ title, score, feedback }: { title: string, score: number, feedback: string[] }) {
+function PersonaCard({ title, score, feedback, persona }: { title: string, score: number, feedback: string[], persona: string }) {
   const normalizedScore = Math.round(score > 1 ? score : score * 100)
 
   return (
@@ -251,6 +274,13 @@ function PersonaCard({ title, score, feedback }: { title: string, score: number,
         <span className="text-primary font-mono text-sm font-bold">{normalizedScore}%</span>
       </div>
       <div className="p-4 flex-grow space-y-4">
+        {/* Persona Voice Judgement */}
+        <div className="bg-surface-container-highest/30 p-3 border-l-2 border-primary italic">
+          <p className="text-sm text-primary font-serif leading-relaxed">
+            "{persona}"
+          </p>
+        </div>
+
         <div className="space-y-3">
           {(feedback || []).map((item, i) => (
             <div key={i} className="flex items-start gap-2">
@@ -266,6 +296,19 @@ function PersonaCard({ title, score, feedback }: { title: string, score: number,
         <div className="h-1 bg-outline-variant w-full overflow-hidden">
           <div className="h-full bg-primary" style={{ width: `${normalizedScore}%` }}></div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function ScoreTile({ label, score }: { label: string, score: number }) {
+  const normalizedScore = Math.round(score > 1 ? score : score * 100)
+  return (
+    <div className="border border-outline-variant bg-surface-container p-4 flex flex-col items-center justify-center text-center">
+      <span className="font-mono text-[10px] text-on-surface-variant uppercase mb-2">{label}</span>
+      <span className="text-2xl font-display text-primary">{normalizedScore}%</span>
+      <div className="mt-2 w-full h-1 bg-outline-variant">
+        <div className="h-full bg-primary" style={{ width: `${normalizedScore}%` }}></div>
       </div>
     </div>
   )

@@ -26,7 +26,7 @@ export interface AmericanResume {
     dates: string
     responsibilities: string[]
   }[]
-  skills: string[]
+  skills: { category: string; items: string[] }[]
   education: {
     degree: string
     school: string
@@ -34,6 +34,11 @@ export interface AmericanResume {
     dates: string
   }[]
   certifications?: string[]
+  projects?: {
+    name: string
+    description: string
+    link?: string
+  }[]
   languages?: { language: string; level: string }[]
 }
 
@@ -52,9 +57,15 @@ export interface AnalysisResults {
   jobTitle?: string
   company?: string
   aggregateScore: number
-  ats: { score: number; feedback: string[] }
-  career: { score: number; feedback: string[] }
-  strategist: { score: number; feedback: string[] }
+  detailedScores: {
+    structure: number
+    formatting: number
+    keywords: number
+    impact: number
+  }
+  ats: { score: number; feedback: string[]; persona: string }
+  career: { score: number; feedback: string[]; persona: string }
+  strategist: { score: number; feedback: string[]; persona: string }
   matrix: MatrixItem[]
   priorityRecommendation: string
   generatedCV?: AmericanResume
