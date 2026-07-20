@@ -68,6 +68,12 @@ export interface AnalysisResults {
   strategist: { score: number; feedback: string[]; persona: string }
   matrix: MatrixItem[]
   priorityRecommendation: string
+  growthTips?: {
+    area: string
+    skillToAcquire: string
+    actionPlan: string
+    longTermImpact: string
+  }[]
   generatedCV?: AmericanResume
 }
 

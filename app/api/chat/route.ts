@@ -57,5 +57,5 @@ export async function POST(req: Request) {
     prompt: `CV CONTENT:\n${cvText}\n\nJOB REQUIREMENTS:\n${jobRequirements}`,
   })
 
-  return result.toDataStreamResponse()
+  return result.toTextStreamResponse()
 }

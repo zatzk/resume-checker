@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import 'pdf-parse/worker'
-import { PDFParse } from 'pdf-parse'
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdf = require('pdf-parse')
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,9 +14,7 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // PDFParse 2.x is a class and requires instantiation
-    const parser = new PDFParse({ data: buffer })
-    const data = await parser.getText()
+    const data = await pdf(buffer)
 
     return NextResponse.json({ text: data.text })
   } catch (error: unknown) {

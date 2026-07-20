@@ -201,7 +201,7 @@ export default function AnalysisFeedbackPage() {
             <div className="space-y-6">
               <h3 className="font-mono text-[13px] text-on-surface-variant uppercase font-bold border-l-2 border-primary pl-3">Strategic_Action_Plan</h3>
               <div className="bg-surface-container-low border border-outline-variant p-4 font-sans text-sm leading-relaxed text-on-surface whitespace-pre-line">
-                {results.developmentPlan}
+                {results.priorityRecommendation}
               </div>
             </div>
             <div className="space-y-6">
