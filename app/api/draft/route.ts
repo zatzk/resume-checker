@@ -2,6 +2,7 @@ import { generateObject } from 'ai'
 import { z } from 'zod'
 import { getAIModel, FAST_PROVIDER_OPTIONS } from '@/lib/ai-provider'
 import { getMasterCV } from '@/lib/master-cv'
+import { prisma } from '@/lib/prisma'
 import { JobAnalysis } from '@/lib/cv-types'
 
 export async function POST(req: Request) {
@@ -12,7 +13,8 @@ export async function POST(req: Request) {
       return Response.json({ error: 'Job description is required' }, { status: 400 })
     }
 
-    const masterCv = getMasterCV()
+    const profile = await prisma.userProfile.findFirst()
+    const masterCv = profile?.masterCv ? JSON.parse(profile.masterCv) : getMasterCV()
     const model = getAIModel()
 
     const { object } = await generateObject({

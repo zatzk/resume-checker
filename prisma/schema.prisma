@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
@@ -11,6 +12,7 @@ datasource db {
 
 model UserProfile {
   id           String   @id @default(uuid())
+  masterCv     String?  // JSON stringified MasterCV object
   rawText      String?
   techStack    String?  // JSON stringified array
   idioms       String?  // JSON stringified array

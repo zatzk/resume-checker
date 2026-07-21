@@ -4,6 +4,7 @@ export interface MasterCV {
   contact: {
     location: string
     email: string
+    phone?: string
     linkedin: string
     github: string
     portfolio: string

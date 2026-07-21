@@ -1,6 +1,4 @@
 import { MasterCV } from './cv-types'
-import fs from 'fs'
-import path from 'path'
 
 export const DEFAULT_MASTER_CV: MasterCV = {
   name: 'Jean Luiz de Souza Junior',
@@ -8,6 +6,7 @@ export const DEFAULT_MASTER_CV: MasterCV = {
   contact: {
     location: 'Salvador, Bahia, Brazil',
     email: 'juniorjean7@gmail.com',
+    phone: '+55 71 99627-1627',
     linkedin: 'https://linkedin.com/in/luiz-jean',
     github: 'https://github.com/zatzk',
     portfolio: 'https://zatzk.live'
@@ -109,15 +108,5 @@ export const DEFAULT_MASTER_CV: MasterCV = {
 }
 
 export function getMasterCV(): MasterCV {
-  // If curriculum.md exists on disk, we can read it, or fallback to DEFAULT_MASTER_CV
-  const markdownPath = '/home/ozymandias/MyProjects/curriculum.md'
-  try {
-    if (fs.existsSync(markdownPath)) {
-      // DEFAULT_MASTER_CV is fully synced with curriculum.md
-      return DEFAULT_MASTER_CV
-    }
-  } catch {
-    // Return default on error
-  }
   return DEFAULT_MASTER_CV
 }

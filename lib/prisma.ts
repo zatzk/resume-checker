@@ -1,16 +1,19 @@
+import 'dotenv/config'
 import { PrismaClient } from '@prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
+const dbUrl = process.env.DATABASE_URL?.replace('file:', '') || './dev.db'
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined
+  prisma: PrismaClient | undefined
 }
 
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+const createPrismaClient = () => {
+  const adapter = new PrismaBetterSqlite3({ url: dbUrl })
+  return new PrismaClient({ adapter })
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient()
 
 export default prisma
 
